@@ -82,25 +82,25 @@ Redis（REmote DIctionary Server）是一款开源、高性能、基于内存的
 
 7.我的配置(密码是只是占位符，需自行修改)
 
-bind 0.0.0.0
-port 6379
-daemonize yes
-loglevel notice
+bind 0.0.0.0 
+port 6379 
+daemonize yes 
+loglevel notice 
 logfile /data/data/com.termux/files/home/Xinhao/Server/logs/redis.log
-dir /data/data/com.termux/files/home/Xinhao/Server/data/redis
-protected-mode no
-requirepass Redisserver-start@myredis
-appendonly yes
-appendfsync everysec
-maxmemory 256mb
-maxmemory-policy allkeys-lru
-maxclients 500
-timeout 300
-databases 16
-tcp-keepalive 60
-save 900 1
-save 300 10
-save 60 100
+dir /data/data/com.termux/files/home/Xinhao/Server/data/redis 
+protected-mode no 
+requirepass Redisserver-start@myredis 
+appendonly yes 
+appendfsync everysec 
+maxmemory 256mb 
+maxmemory-policy allkeys-lru 
+maxclients 500 
+timeout 300 
+databases 16 
+tcp-keepalive 60 
+save 900 1 
+save 300 10 
+save 60 100 
 
 
 -再警告一遍，这是我的配置，别直接抄！！！特别是密码和日志,数据目录
