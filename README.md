@@ -82,33 +82,33 @@ Redis（REmote DIctionary Server）是一款开源、高性能、基于内存的
 
 7.我的配置(密码是只是占位符，需自行修改)
 
-# bind 0.0.0.0
-# port 6379
-# pidfile /data/data/com.termux/files/home/Xinhao/Server/run/Redis/Redis.pid
-# tcp-backlog 511
-# daemonize yes
-# loglevel notice
-# logfile /data/data/com.termux/files/home/Xinhao/Server/logs/Redis/Redis.log
-# dir /data/data/com.termux/files/home/Xinhao/Server/data/redis
-# protected-mode no
-# requirepass Redisserver-start@myredis
-# appendonly yes
-# appendfsync everysec
-# aof-rewrite-incremental-fsync yes
-# aof-load-truncated yes
-# aof-use-rdb-preamble yes
-# appendfilename "appendonly.aof"
-# maxmemory 256mb
-# maxmemory-policy allkeys-lru
-# maxclients 500
-# timeout 300
-# databases 16
-# tcp-keepalive 60
-# save 86400 100
-# save 3600 10
-# save 600 1
-# bind 0.0.0.0
-# port 6379
+ bind 0.0.0.0
+ port 6379
+ pidfile /data/data/com.termux/files/home/Xinhao/Server/run/Redis/Redis.pid
+ tcp-backlog 511
+ daemonize yes
+ loglevel notice
+ logfile /data/data/com.termux/files/home/Xinhao/Server/logs/Redis/Redis.log
+ dir /data/data/com.termux/files/home/Xinhao/Server/data/redis
+ protected-mode no
+ requirepass Redisserver-start@myredis
+ appendonly yes
+ appendfsync everysec
+ aof-rewrite-incremental-fsync yes
+ aof-load-truncated yes
+ aof-use-rdb-preamble yes
+ appendfilename "appendonly.aof"
+ maxmemory 256mb
+ maxmemory-policy allkeys-lru
+ maxclients 500
+ timeout 300
+ databases 16
+ tcp-keepalive 60
+ save 86400 100
+ save 3600 10
+ save 600 1
+ bind 0.0.0.0
+ port 6379
 
 -再警告一遍，这是我的配置，别直接抄！！！特别是密码和日志,数据目录
 
