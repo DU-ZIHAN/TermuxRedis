@@ -82,170 +82,131 @@ Redis（REmote DIctionary Server）是一款开源、高性能、基于内存的
 
 7.我的配置(密码是只是占位符，需自行修改)
 
-bind 0.0.0.0 
-port 6379 
-daemonize yes 
-loglevel notice 
-logfile /data/data/com.termux/files/home/Xinhao/Server/logs/redis.log
-dir /data/data/com.termux/files/home/Xinhao/Server/data/redis 
-protected-mode no 
-requirepass Redisserver-start@myredis 
-appendonly yes 
-appendfsync everysec 
-maxmemory 256mb 
-maxmemory-policy allkeys-lru 
-maxclients 500 
-timeout 300 
-databases 16 
-tcp-keepalive 60 
-save 900 1 
-save 300 10 
-save 60 100 
-
+bind 0.0.0.0
+port 6379
+pidfile /data/data/com.termux/files/home/Xinhao/Server/run/Redis/Redis.pid
+tcp-backlog 511
+daemonize yes
+loglevel notice
+logfile /data/data/com.termux/files/home/Xinhao/Server/logs/Redis/Redis.log
+dir /data/data/com.termux/files/home/Xinhao/Server/data/redis
+protected-mode no
+requirepass Redisserver-start@myredis
+appendonly yes
+appendfsync everysec
+aof-rewrite-incremental-fsync yes
+aof-load-truncated yes
+aof-use-rdb-preamble yes
+appendfilename "appendonly.aof"
+maxmemory 256mb
+maxmemory-policy allkeys-lru
+maxclients 500
+timeout 300
+databases 16
+tcp-keepalive 60
+save 86400 100
+save 3600 10
+save 600 1
+bind 0.0.0.0
+port 6379
 
 -再警告一遍，这是我的配置，别直接抄！！！特别是密码和日志,数据目录
 
 8.给你们的配置模板(主要内容，你们移动端Termux配置只需要跟着他，一些参数建议自己改一下)
 
+# ==============================================
+# Redis 配置模板 for Termux / Linux
+# 适用：个人本地服务、局域网部署
+# 警告：以下配置为演示模板，部署前务必修改！
+# 1. 目录警告：请自行更改目录，如果你执意要继续用我的目录，请先创建，否则服务运行不起来。
+# 2. 密码警告：该密码为示例密码，请自行更改密码。
+# 3. 内存警告：根据你手机硬件自行调整 maxmemory
+# ==============================================
+
+# 监听所有网卡（局域网/本机均可访问）
 bind 0.0.0.0
 
-翻译：允许所有 IP 地址连接 Redis​
-
-意思：局域网、本机、其他设备都能连。
-
- 
-
+# Redis 默认端口
 port 6379
 
-翻译：Redis 服务端口设为 6379​
+# 进程 PID 文件路径（目录需提前创建）
+pidfile /data/data/com.termux/files/home/Xinhao/Server/run/Redis/Redis.pid
 
-意思：默认端口。
+# 连接队列长度，高并发场景有用
+tcp-backlog 511
 
- 
-
+# 后台守护进程运行（关闭终端仍保持服务）
 daemonize yes
 
-翻译：以守护进程（后台）方式运行​
-
-意思：关闭终端，Redis 还在后台跑。
-
- 
-
+# 日志级别（notice 适合生产环境）
 loglevel notice
 
-翻译：日志级别为 notice​
+# 日志存放路径（目录需提前创建）
+logfile /data/data/com.termux/files/home/Xinhao/Server/logs/Redis/Redis.log
 
-意思：只记录重要信息，不刷大量日志。
-
- 
-
-logfile /data/data/com.termux/files/home/Xinhao/Server/logs/redis.log
-
-翻译：日志文件保存到指定路径​
-
-意思：所有运行日志写在这个文件里。
-
--注意:这是我的目录，请替换为您的目录
-
+# Redis 数据工作目录（持久化文件会存在这里）
 dir /data/data/com.termux/files/home/Xinhao/Server/data/redis
 
-翻译：数据文件存放目录​
-
-意思：RDB、AOF 都存在这里。
-
--注意:这个是我的目录，请更换为您的目录
-
+# 关闭保护模式，允许局域网连接（配合密码使用）
 protected-mode no
 
-翻译：关闭保护模式​
+# 连接密码（重要！请务必修改）
+requirepass Redisserver-start@myredis
 
-意思：允许外部设备连接，不限制只能本机访问。
+# ==============================================
+# 持久化配置（数据安全）
+# ==============================================
 
- 
-
-requirepass 你设置的强密码
-
-翻译：设置 Redis 连接密码​
-
-意思：连接必须先认证密码，否则无法操作。
-
- 
-
+# 开启 AOF 持久化（每写操作都记录，数据最安全）
 appendonly yes
 
-翻译：开启 AOF 持久化​
-
-意思：把每一条写操作记录到文件，重启可恢复。
-
- 
-
+# AOF 刷盘策略：每秒同步（性能与安全平衡）
 appendfsync everysec
 
-翻译：每秒同步一次 AOF 文件到磁盘​
+# AOF 重写时采用增量刷盘，降低阻塞
+aof-rewrite-incremental-fsync yes
 
-意思：性能与数据安全平衡。
+# AOF 文件被截断时仍允许加载（防止异常断电无法启动）
+aof-load-truncated yes
 
- 
+# AOF 开头使用 RDB 格式，加载更快、体积更小
+aof-use-rdb-preamble yes
 
+# AOF 文件名
+appendfilename "appendonly.aof"
+
+# ==============================================
+# 内存与淘汰策略（手机/低内存设备必备）
+# ==============================================
+
+# 最大使用内存（根据手机配置自行调整）
 maxmemory 256mb
 
-翻译：最大使用内存限制为 256MB​
-
-意思：超过就开始删键。
-
- 
-
+# 内存满后淘汰策略：删除最少使用的 key
 maxmemory-policy allkeys-lru
 
-翻译：内存满时，删除最久未使用的键​
-
-意思：保证服务不崩，自动清理。
-
- 
-
+# 最大同时连接数
 maxclients 500
 
-翻译：最大同时连接数 500​
-
-意思：最多允许 500 个客户端连进来。
-
- 
-
+# 客户端空闲超时自动断开
 timeout 300
 
-翻译：客户端空闲 300 秒（5分钟）自动断开​
-
-意思：释放无用连接。
-
- 
-
+# 数据库数量
 databases 16
 
-翻译：共创建 16 个数据库​
-
-意思：默认 0~15 号库。
-
- 
-
+# TCP 长连接保活时间
 tcp-keepalive 60
 
-翻译：TCP 心跳检测 60 秒一次​
-
-意思：及时发现死连接。
-
- 
-
+# ==============================================
+# RDB 快照持久化（和 AOF 同时开启，双保险）
+# ==============================================
+# 900秒(15分钟) 至少1个key变化则保存
 save 900 1
-
-翻译：900 秒内至少 1 次修改，就生成 RDB 快照
-
+# 300秒(5分钟) 至少10个key变化则保存
 save 300 10
+# 60秒(1分钟) 至少10000个key变化则保存
+save 60 10000
 
-翻译：300 秒内至少 10 次修改，就生成 RDB 快照
-
-save 60 100
-
-翻译：60 秒内至少 100 次修改，就生成 RDB 快照
 
 AOF + RDB 双持久化​
 
@@ -280,6 +241,11 @@ AOF + RDB 双持久化​
 -本仓库提供的配置请先经过AI确认是否彻底有效
 
 -如果无效本仓库作者不负责
+
+12.版权声明
+
+-本仓库遵循GPL协议(https://www.gnu.org/licenses/gpl-3.0.html)
+-但请勿盗用，闭源商用。
 
 12.反馈建议
 
